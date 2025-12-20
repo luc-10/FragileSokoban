@@ -18,3 +18,7 @@ config/icon="res://icon.svg"
 [dotnet]
 
 project/assembly_name="FragileSokoban"
+
+[physics]
+
+2d/default_gravity=0.0
