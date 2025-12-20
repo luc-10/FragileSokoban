@@ -1,0 +1,16 @@
+[gd_scene load_steps=3 format=3 uid="uid://dqscbgfm1rq88"]
+
+[ext_resource type="Texture2D" uid="uid://chcyuuqoqss8q" path="res://assets/kenney_sokoban-pack/Tilesheet/sokoban_tilesheet.png" id="1_u4713"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hpry5"]
+size = Vector2(40, 50)
+
+[node name="PlayerCharacter" type="CharacterBody2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_hpry5")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_u4713")
+region_enabled = true
+region_rect = Rect2(0, 257, 64, 64)
