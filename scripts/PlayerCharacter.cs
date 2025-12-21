@@ -4,43 +4,52 @@ using System;
 public partial class PlayerCharacter : CharacterBody2D
 {
 	[Export] public float Speed = 256f;
+	[Export] public int TileSize = 64;
+	[Export] private float MoveTime = 0.2f;
+	private bool _moving = false;
 
+	public override void _Ready()
+	{
+		
+	}
 	public override void _PhysicsProcess(double delta)
 	{
-		GetPlayerInput();
-		if (MoveAndSlide())
+		var dir = getInput();
+		if (_moving || dir == Vector2.Zero)
 		{
-			ResolveCollisions();
+			return;
 		}
+
+		var targetPos = Position + TileSize * dir;
+		_moving = true;
+		Tween tween = CreateTween();
+		tween.TweenProperty(this, "position", targetPos, MoveTime);
+		tween.Finished += () =>
+		{
+			_moving = false;
+		};
+
 	}
 
-	private void GetPlayerInput()
+	private Vector2 getInput()
 	{
-		Vector2 dir = Input.GetVector(
-			"move_left",
-			"move_right",
-			"move_up",
-			"move_down"
-		);
-		Velocity = dir * Speed;
-	}
-
-	private void ResolveCollisions()
-	{
-		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		Vector2 dir = Vector2.Zero;
+		if (Input.IsActionJustPressed("ui_up"))
 		{
-			var collision = GetSlideCollision(i);
-			var body = (Box)collision.GetCollider();
-			if (body != null)
-			{
-				Vector2 dir = Input.GetVector(
-				"move_left",
-				"move_right",
-				"move_up",
-				"move_down"
-			);
-				body.MoveBox(dir);
-			}
+			dir = Vector2.Up;
+		} else if (Input.IsActionJustPressed("ui_down"))
+		{
+			dir = Vector2.Down;
+		} else if (Input.IsActionJustPressed("ui_right"))
+		{
+			dir = Vector2.Right;
+		} else if (Input.IsActionJustPressed("ui_left"))
+		{
+			dir = Vector2.Left;
 		}
+
+		return dir;
 	}
 }
+
+

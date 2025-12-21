@@ -3,7 +3,7 @@
 [ext_resource type="Texture2D" uid="uid://chcyuuqoqss8q" path="res://assets/kenney_sokoban-pack/Tilesheet/sokoban_tilesheet.png" id="1_u4713"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hpry5"]
-size = Vector2(40, 50)
+size = Vector2(64, 64)
 
 [node name="PlayerCharacter" type="CharacterBody2D"]
 
