@@ -4,7 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://dqscbgfm1rq88" path="res://playerCharacter.tscn" id="2_h2yge"]
 [ext_resource type="Script" uid="uid://bjppcw66uvjre" path="res://scripts/PlayerCharacter.cs" id="3_1bvp3"]
 [ext_resource type="PackedScene" uid="uid://c072nbnqb2bqf" path="res://box.tscn" id="4_1bvp3"]
-[ext_resource type="Texture2D" uid="uid://b0glb8okmcwip" path="res://box_render_sprite.png" id="6_7mycd"]
+[ext_resource type="Texture2D" uid="uid://bsebb3748vwvx" path="res://box_render_sprite.png" id="6_7mycd"]
 [ext_resource type="Script" uid="uid://bcyiqoa63ukuo" path="res://scripts/Box.cs" id="6_272bh"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xm2m"]
@@ -155,5 +155,6 @@ position = Vector2(360, -94)
 texture = ExtResource("6_7mycd")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Box3"]
+visible = false
 position = Vector2(360, -80)
 shape = SubResource("RectangleShape2D_7mycd")
