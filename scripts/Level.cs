@@ -98,20 +98,55 @@ public partial class Level : Node2D
 
 	public bool canMoveTo(Vector2 pos, Vector2 dir)
 	{
-		var target = pos + dir;
-		var cell = grid[(int)target.X, (int)target.Y];
-		if (cell == CellType.Wall)
+		if (getTargetCell(pos, dir) == CellType.Wall)
 		{
 			printGrid();
 			return false;
-		} else if (cell == CellType.Box)
+		} else if (getTargetCell(dir,pos) == CellType.Box)
 		{
+			//What to do:
+			//Find all boxes
+			//Look for the ones that would be moving into walls
+			//call removeBox on them
+			//call canMoveTo on all the others
+			//check if the player can move
+			//profit?
+			var boxes = GetTree().GetNodesInGroup("Boxes");
+			List<Box> notAgainstWall = new List<Box>();
+			foreach (Box box in boxes)
+			{
+				Vector2 boxPos = new Vector2(box.Position.X / Main.TileSize, box.Position.Y / Main.TileSize);
+				if (getTargetCell(boxPos,dir) == CellType.Wall)
+				{
+					if (box.RemoveBox())
+					{
+						grid[(int)boxPos.X, (int)boxPos.Y] = CellType.Empty;
+					}
+				}
+				else
+				{
+					notAgainstWall.Add(box);
+				}
+			}
+
+			foreach (Box box in notAgainstWall)
+			{
+				box.MoveBox(dir);
+				Vector2 boxPos = new Vector2(box.Position.X / Main.TileSize, box.Position.Y / Main.TileSize);
+				
+				(grid[(int)boxPos.X + (int)dir.X, (int)boxPos.Y + (int)dir.Y], grid[(int)boxPos.X, (int)boxPos.Y]) = (grid[(int)boxPos.X, (int)boxPos.Y],grid[(int)boxPos.X + (int)dir.X, (int)boxPos.Y + (int)dir.Y]);
+
+				
+			}
+
+			return getTargetCell(pos, dir) == CellType.Empty;
+			/*
 			if (canMoveTo(target, dir))
 			{
 				//Move box at position = target
 				(grid[(int)target.X + (int)dir.X, (int)target.Y + (int)dir.Y], grid[(int)target.X, (int)target.Y]) = (grid[(int)target.X, (int)target.Y],grid[(int)target.X + (int)dir.X, (int)target.Y + (int)dir.Y]);
 				var boxes = GetTree().GetNodesInGroup("Boxes");
-				
+
 				// Look for all boxes, when it finds one that is at the same position as the one in the grid then move it
 				foreach (Box box in boxes)
 				{
@@ -129,12 +164,15 @@ public partial class Level : Node2D
 				printGrid();
 				return false;
 			}
+			*/
 		} 
 		printGrid();
 		return true;
 	}
 
-	private void updateGraphics(Vector2I from, Vector2I to)
+	private CellType getTargetCell(Vector2 pos, Vector2 dir)
 	{
+		var target = pos + dir;
+		return grid[(int)target.X, (int)target.Y];
 	}
 }

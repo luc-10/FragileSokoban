@@ -7,6 +7,7 @@ public partial class Box : CharacterBody2D
 	[Export] public float MoveTime = 0.1f;
 
 	private bool _moving = false;
+	[Export] int hp = 5;
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -39,4 +40,20 @@ public partial class Box : CharacterBody2D
 
 
 	}
+
+	//find a better name, returns true if the box is destroyed
+	public bool RemoveBox()
+	{
+		hp--;
+		GD.Print("hp now ",hp);
+		if (hp == 0)
+		{
+			QueueFree();
+			return true;
+		}
+
+		return false;
+	}
+	
+	
 }
