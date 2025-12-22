@@ -51,6 +51,10 @@ public partial class LevelManager : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		if (Input.IsActionJustPressed("reset"))
+		{
+			LoadLevel();
+		}
 	}
 
 	public void loadNextLevel()
@@ -58,4 +62,6 @@ public partial class LevelManager : Node
 		index++;
 		LoadLevel();
 	}
+	
+	
 }
