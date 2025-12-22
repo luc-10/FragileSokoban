@@ -1,11 +1,9 @@
-[gd_scene load_steps=10 format=4 uid="uid://gcv1qeghyb2h"]
+[gd_scene load_steps=7 format=4 uid="uid://gcv1qeghyb2h"]
 
 [ext_resource type="Script" uid="uid://cs84sqxycj5rs" path="res://scripts/Level.cs" id="1_j1kv5"]
 [ext_resource type="Texture2D" uid="uid://chcyuuqoqss8q" path="res://assets/kenney_sokoban-pack/Tilesheet/sokoban_tilesheet.png" id="2_hckec"]
 [ext_resource type="PackedScene" uid="uid://dyf24ww1fvbsn" path="res://detector.tscn" id="3_6bhxy"]
 [ext_resource type="PackedScene" uid="uid://c072nbnqb2bqf" path="res://box.tscn" id="4_ewufw"]
-[ext_resource type="Script" uid="uid://bcyiqoa63ukuo" path="res://scripts/Box.cs" id="5_wj2j6"]
-[ext_resource type="Texture2D" uid="uid://bsebb3748vwvx" path="res://box_render_sprite.png" id="6_m1uar"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_0xm2m"]
 texture = ExtResource("2_hckec")
@@ -119,10 +117,7 @@ tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_0xm2m")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_7mycd"]
-size = Vector2(64, 64)
-
-[node name="Level" type="Node2D"]
+[node name="Level2" type="Node2D"]
 script = ExtResource("1_j1kv5")
 TmlWallsPath = NodePath("TmlWalls")
 TmlBackgroundPath = NodePath("TmlBackground")
@@ -152,19 +147,6 @@ position = Vector2(352, 224)
 
 [node name="Box4" parent="Boxes" groups=["Boxes"] instance=ExtResource("4_ewufw")]
 position = Vector2(416, 160)
-
-[node name="Box3" type="CharacterBody2D" parent="Boxes"]
-position = Vector2(0, 832)
-script = ExtResource("5_wj2j6")
-
-[node name="BoxSprite" type="Sprite2D" parent="Boxes/Box3"]
-position = Vector2(360, -94)
-texture = ExtResource("6_m1uar")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Boxes/Box3"]
-visible = false
-position = Vector2(360, -80)
-shape = SubResource("RectangleShape2D_7mycd")
 
 [node name="PlayerStart" type="Marker2D" parent="."]
 position = Vector2(160, 160)

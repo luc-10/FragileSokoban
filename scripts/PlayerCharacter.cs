@@ -39,16 +39,16 @@ public partial class PlayerCharacter : CharacterBody2D
 	private Vector2I getInput()
 	{
 		Vector2I dir = Vector2I.Zero;
-		if (Input.IsActionJustPressed("ui_up"))
+		if (Input.IsActionJustPressed("move_up"))
 		{
 			dir = Vector2I.Up;
-		} else if (Input.IsActionJustPressed("ui_down"))
+		} else if (Input.IsActionJustPressed("move_down"))
 		{
 			dir = Vector2I.Down;
-		} else if (Input.IsActionJustPressed("ui_right"))
+		} else if (Input.IsActionJustPressed("move_right"))
 		{
 			dir = Vector2I.Right;
-		} else if (Input.IsActionJustPressed("ui_left"))
+		} else if (Input.IsActionJustPressed("move_left"))
 		{
 			dir = Vector2I.Left;
 		}
