@@ -11,17 +11,33 @@ public partial class Level : Node2D
 	public int Width, Height;
 	
 	public CellType[,] grid;
+	private Dictionary<Vector2I, Box> coordsToBoxMap;
+	private Dictionary<Box, Vector2I> boxToCoordsMap;
 	
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
 		fillGrid();
 		printGrid();
+		fillMaps();
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+	}
+
+	private void fillMaps()
+	{
+		coordsToBoxMap = new();
+		boxToCoordsMap = new();
+		var boxes = GetTree().GetNodesInGroup("Boxes");
+		foreach (Box box in boxes)
+		{
+			Vector2I boxPos = new Vector2I((int)box.Position.X / Main.TileSize, (int)box.Position.Y / Main.TileSize);
+			coordsToBoxMap[boxPos] = box;
+			boxToCoordsMap[box] = boxPos;
+		}
 	}
 
 	private void fillGrid()
@@ -49,9 +65,9 @@ public partial class Level : Node2D
 		// Put the walls
 		
 		var walls = GetNode<TileMapLayer>(TmlWallsPath);
-		foreach (Vector2 cell in walls.GetUsedCells())
+		foreach (Vector2I cell in walls.GetUsedCells())
 		{
-			grid[(int)cell.X-rect.Position.X,(int)cell.Y-rect.Position.Y] = CellType.Wall;
+			grid[cell.X-rect.Position.X,cell.Y-rect.Position.Y] = CellType.Wall;
 		}
 		
 		
@@ -60,8 +76,8 @@ public partial class Level : Node2D
 		var boxes = GetTree().GetNodesInGroup("Boxes");
 		foreach (Box box in boxes)
 		{
-			Vector2 cell = new Vector2(box.Position.X/Main.TileSize, box.Position.Y/Main.TileSize);
-			grid[(int)cell.X-rect.Position.X,(int)cell.Y-rect.Position.Y] = CellType.Box;
+			Vector2I cell = new Vector2I((int)box.Position.X/Main.TileSize, (int)box.Position.Y/Main.TileSize);
+			grid[cell.X-rect.Position.X,cell.Y-rect.Position.Y] = CellType.Box;
 		}
 		
 		
@@ -96,83 +112,87 @@ public partial class Level : Node2D
 		
 	}
 
-	public bool canMoveTo(Vector2 pos, Vector2 dir)
+	public bool canMoveTo(Vector2I pos, Vector2I dir)
 	{
 		if (getTargetCell(pos, dir) == CellType.Wall)
 		{
 			printGrid();
 			return false;
-		} else if (getTargetCell(dir,pos) == CellType.Box)
+		} else if (getTargetCell(pos,dir) == CellType.Box)
 		{
-			//What to do:
-			//Find all boxes
-			//Look for the ones that would be moving into walls
-			//call removeBox on them
-			//call canMoveTo on all the others
-			//check if the player can move
-			//profit?
 			var boxes = GetTree().GetNodesInGroup("Boxes");
-			List<Box> notAgainstWall = new List<Box>();
+			HashSet<Box> moved = new();
 			foreach (Box box in boxes)
 			{
-				Vector2 boxPos = new Vector2(box.Position.X / Main.TileSize, box.Position.Y / Main.TileSize);
-				if (getTargetCell(boxPos,dir) == CellType.Wall)
-				{
-					if (box.RemoveBox())
-					{
-						grid[(int)boxPos.X, (int)boxPos.Y] = CellType.Empty;
-					}
-				}
-				else
-				{
-					notAgainstWall.Add(box);
-				}
-			}
-
-			foreach (Box box in notAgainstWall)
-			{
-				box.MoveBox(dir);
-				Vector2 boxPos = new Vector2(box.Position.X / Main.TileSize, box.Position.Y / Main.TileSize);
 				
-				(grid[(int)boxPos.X + (int)dir.X, (int)boxPos.Y + (int)dir.Y], grid[(int)boxPos.X, (int)boxPos.Y]) = (grid[(int)boxPos.X, (int)boxPos.Y],grid[(int)boxPos.X + (int)dir.X, (int)boxPos.Y + (int)dir.Y]);
-
-				
+				checkBoxMove(boxToCoordsMap[box],dir, moved);
+				printGrid();
 			}
-
 			return getTargetCell(pos, dir) == CellType.Empty;
-			/*
-			if (canMoveTo(target, dir))
-			{
-				//Move box at position = target
-				(grid[(int)target.X + (int)dir.X, (int)target.Y + (int)dir.Y], grid[(int)target.X, (int)target.Y]) = (grid[(int)target.X, (int)target.Y],grid[(int)target.X + (int)dir.X, (int)target.Y + (int)dir.Y]);
-				var boxes = GetTree().GetNodesInGroup("Boxes");
-
-				// Look for all boxes, when it finds one that is at the same position as the one in the grid then move it
-				foreach (Box box in boxes)
-				{
-					if (box.Position.X/Main.TileSize == target.X && box.Position.Y/Main.TileSize == target.Y)
-					{
-						box.MoveBox(dir);
-						break;
-					}
-				}
-				printGrid();
-				return true;
-			}
-			else
-			{
-				printGrid();
-				return false;
-			}
-			*/
 		} 
 		printGrid();
 		return true;
 	}
 
-	private CellType getTargetCell(Vector2 pos, Vector2 dir)
+	private void checkBoxMove(Vector2I pos, Vector2I dir, HashSet<Box> moved)
+	{
+		var box = coordsToBoxMap[pos];
+		if (!moved.Contains(box))
+		{
+			//If wall don't move
+			//If box try to move other box
+			//If empty move
+			if (getTargetCell(pos, dir) == CellType.Wall)
+			{
+
+				if (box.RemoveBox())
+				{
+					grid[pos.X, pos.Y] = CellType.Empty;
+					coordsToBoxMap.Remove(boxToCoordsMap[box]);
+					boxToCoordsMap.Remove(box);
+				}
+			} else if (getTargetCell(pos, dir) == CellType.Empty) // add goal eventually
+			{
+				box.MoveBox(dir);
+				(grid[pos.X + dir.X, pos.Y + dir.Y], grid[pos.X, pos.Y]) = 
+					(grid[pos.X, pos.Y],grid[pos.X + dir.X, pos.Y + dir.Y]);
+				boxToCoordsMap[box] = new Vector2I(pos.X + dir.X, pos.Y + dir.Y);
+				coordsToBoxMap.Remove(pos);
+				coordsToBoxMap[new Vector2I(pos.X + dir.X, pos.Y + dir.Y)] = box;
+
+			}
+			else if (getTargetCell(pos, dir) == CellType.Box)
+			{
+				checkBoxMove(pos+dir,dir,moved);
+
+				if (getTargetCell(pos, dir) == CellType.Empty)
+				{
+					box.MoveBox(dir);
+					(grid[pos.X + dir.X, pos.Y + dir.Y], grid[pos.X, pos.Y]) = 
+						(grid[pos.X, pos.Y],grid[pos.X + dir.X, pos.Y + dir.Y]);
+					boxToCoordsMap[box] = new Vector2I(pos.X + dir.X, pos.Y + dir.Y);
+					coordsToBoxMap.Remove(pos);
+					coordsToBoxMap[new Vector2I(pos.X + dir.X, pos.Y + dir.Y)] = box;
+				}
+				else
+				{
+					if (box.RemoveBox())
+					{
+						
+						grid[pos.X, pos.Y] = CellType.Empty;
+						coordsToBoxMap.Remove(boxToCoordsMap[box]);
+						boxToCoordsMap.Remove(box);
+					}
+				}
+			}
+			moved.Add(box);
+			
+		}
+	}
+
+	private CellType getTargetCell(Vector2I pos, Vector2I dir)
 	{
 		var target = pos + dir;
-		return grid[(int)target.X, (int)target.Y];
+		return grid[target.X, target.Y];
 	}
 }

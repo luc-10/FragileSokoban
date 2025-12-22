@@ -15,7 +15,8 @@ public partial class PlayerCharacter : CharacterBody2D
 	public override void _PhysicsProcess(double delta)
 	{
 		var dir = getInput();
-		if (_moving || dir == Vector2.Zero || !_currLevel.canMoveTo(Position/Main.TileSize,dir))
+		Vector2I gridPos = new Vector2I((int)Position.X/Main.TileSize,(int)Position.Y/Main.TileSize);
+		if (_moving || dir == Vector2.Zero || !_currLevel.canMoveTo(gridPos,dir))
 		{
 			return;
 		}
@@ -31,21 +32,21 @@ public partial class PlayerCharacter : CharacterBody2D
 
 	}
 
-	private Vector2 getInput()
+	private Vector2I getInput()
 	{
-		Vector2 dir = Vector2.Zero;
+		Vector2I dir = Vector2I.Zero;
 		if (Input.IsActionJustPressed("ui_up"))
 		{
-			dir = Vector2.Up;
+			dir = Vector2I.Up;
 		} else if (Input.IsActionJustPressed("ui_down"))
 		{
-			dir = Vector2.Down;
+			dir = Vector2I.Down;
 		} else if (Input.IsActionJustPressed("ui_right"))
 		{
-			dir = Vector2.Right;
+			dir = Vector2I.Right;
 		} else if (Input.IsActionJustPressed("ui_left"))
 		{
-			dir = Vector2.Left;
+			dir = Vector2I.Left;
 		}
 
 		return dir;
