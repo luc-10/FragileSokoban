@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cimcocre8vm0n" path="res://scripts/Main.cs" id="1_5vw27"]
 [ext_resource type="PackedScene" uid="uid://dqscbgfm1rq88" path="res://playerCharacter.tscn" id="2_h2yge"]
 [ext_resource type="Script" uid="uid://bjppcw66uvjre" path="res://scripts/PlayerCharacter.cs" id="3_1bvp3"]
-[ext_resource type="PackedScene" uid="uid://cqu5htecbhroc" path="res://startScreen.tscn" id="5_lquwl"]
+[ext_resource type="PackedScene" path="res://startScreen.tscn" id="5_lquwl"]
 [ext_resource type="Script" uid="uid://b86r1jr5njens" path="res://scripts/LevelManager.cs" id="7_272bh"]
 
 [node name="Main" type="Node2D"]
