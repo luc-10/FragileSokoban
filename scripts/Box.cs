@@ -9,6 +9,14 @@ public partial class Box : CharacterBody2D
 	private bool _moving = false;
 	[Export] int hp = 5;
 
+	private Sprite2D sprite;
+
+	public override void _Ready()
+	{
+		sprite = GetNode<Sprite2D>("Sprite2D");
+		sprite.RegionRect = new Rect2(Main.TileSize * (hp-1), 0, Main.TileSize, Main.TileSize);
+	}
+
 	public override void _PhysicsProcess(double delta)
 	{
 	}
@@ -45,7 +53,7 @@ public partial class Box : CharacterBody2D
 	public bool RemoveBox()
 	{
 		hp--;
-		GD.Print("hp now ",hp);
+		sprite.RegionRect = new Rect2(Main.TileSize * (hp-1), 0, Main.TileSize, Main.TileSize);
 		if (hp == 0)
 		{
 			QueueFree();

@@ -21,6 +21,5 @@ LevelPath = NodePath("")
 script = ExtResource("7_272bh")
 PlayerPath = NodePath("../PlayerCharacter")
 LevelContainerPath = NodePath("../LevelContainer")
-index = 10
 
 [node name="UI" parent="." instance=ExtResource("5_lquwl")]

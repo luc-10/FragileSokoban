@@ -1,7 +1,7 @@
 [gd_scene load_steps=4 format=3 uid="uid://c072nbnqb2bqf"]
 
-[ext_resource type="Texture2D" uid="uid://chcyuuqoqss8q" path="res://assets/kenney_sokoban-pack/Tilesheet/sokoban_tilesheet.png" id="1_g2tbl"]
 [ext_resource type="Script" uid="uid://bcyiqoa63ukuo" path="res://scripts/Box.cs" id="1_oq5cr"]
+[ext_resource type="Texture2D" uid="uid://beyta3hx4oh1r" path="res://assets/fragileTileSheet.png" id="2_oq5cr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_g2tbl"]
 size = Vector2(16, 16)
@@ -11,9 +11,9 @@ collision_layer = 3
 script = ExtResource("1_oq5cr")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("1_g2tbl")
+texture = ExtResource("2_oq5cr")
 region_enabled = true
-region_rect = Rect2(384, 0, 64, 64)
+region_rect = Rect2(0, 0, 64, 64)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_g2tbl")
