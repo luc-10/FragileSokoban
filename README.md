@@ -22,4 +22,4 @@ Move carefully, place each fragile potion in a proper spot, and avoid breaking a
 
 #
 
-A puzzle game made by [luc-10](https://github.com/luc-10) and me for [Mini Jam 200: Freedom](https://itch.io/jam/mini-jam-200-freedom)
+A puzzle game made by [luc-10](https://github.com/luc-10) and [del-Real](https://github.com/del-Real) for [Mini Jam 200: Freedom](https://itch.io/jam/mini-jam-200-freedom)
